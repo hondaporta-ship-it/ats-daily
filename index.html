@@ -2,330 +2,157 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f4f5f7">
 <title>ATS 今日のひとこと</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: #f4f5f7;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    color: #1a2744;
-  }
-
-  .container {
-    width: 100%;
-    max-width: 480px;
-    text-align: center;
-  }
-
-  /* ヘッダー */
-  .header {
-    margin-bottom: 40px;
-  }
-
-  .header-logo {
-    display: inline-block;
-    background: #1a2744;
-    color: white;
-    font-family: 'Noto Serif JP', serif;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 4px;
-    padding: 6px 16px;
-    margin-bottom: 12px;
-  }
-
-  .header-date {
-    font-size: 13px;
-    color: #6b7280;
-    letter-spacing: 1px;
-  }
-
-  /* メインボタン */
-  .btn-wrapper {
-    margin-bottom: 48px;
-  }
-
-  .btn-main {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: #1a2744;
-    border: none;
-    cursor: pointer;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    box-shadow: 0 8px 32px rgba(26, 39, 68, 0.25);
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-main::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.08);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .btn-main:hover {
-    transform: scale(1.04);
-    box-shadow: 0 12px 40px rgba(26, 39, 68, 0.35);
-  }
-
-  .btn-main:hover::before { opacity: 1; }
-
-  .btn-main:active {
-    transform: scale(0.97);
-  }
-
-  .btn-icon {
-    font-size: 36px;
-    line-height: 1;
-  }
-
-  .btn-label {
-    color: white;
-    font-family: 'Noto Serif JP', serif;
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: 3px;
-  }
-
-  /* カード */
-  .card {
-    background: white;
-    border-radius: 2px;
-    padding: 36px 32px;
-    box-shadow: 0 2px 16px rgba(26, 39, 68, 0.08);
-    opacity: 0;
-    transform: translateY(12px);
-    transition: all 0.4s ease;
-    display: none;
-    text-align: left;
-  }
-
-  .card.show {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .card-theme {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    color: #6b7280;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #e5e7eb;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .card-theme::before {
-    content: '';
-    display: inline-block;
-    width: 3px;
-    height: 14px;
-    background: #1a2744;
-    border-radius: 2px;
-  }
-
-  .card-word {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 1.8;
-    color: #1a2744;
-    margin-bottom: 20px;
-    white-space: pre-line;
-  }
-
-  .card-desc {
-    font-size: 13px;
-    color: #6b7280;
-    line-height: 1.8;
-    padding-top: 16px;
-    border-top: 1px solid #f3f4f6;
-  }
-
-  /* 曜日バッジ */
-  .day-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #f3f4f6;
-    color: #4b5563;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 4px 12px;
-    border-radius: 100px;
-    margin-bottom: 32px;
-    letter-spacing: 1px;
-  }
-
-  /* フッター */
-  .footer {
-    margin-top: 48px;
-    font-size: 11px;
-    color: #9ca3af;
-    letter-spacing: 2px;
-  }
-
-  /* アニメーション */
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .card.animate {
-    animation: fadeInUp 0.4s ease forwards;
-  }
-
-  /* モバイル調整 */
-  @media (max-width: 480px) {
-    .btn-main { width: 140px; height: 140px; }
-    .btn-icon { font-size: 30px; }
-    .btn-label { font-size: 14px; }
-    .card-word { font-size: 17px; }
-    .card { padding: 28px 24px; }
-  }
+:root {
+  --bg-base: #f4f5f7;
+  --navy-deep: #0f2744;
+  --navy: #1a3a5c;
+  --navy-mid: #2d5278;
+  --navy-soft: #5b7a9b;
+  --text-primary: #1a2433;
+  --text-secondary: #6b7a8c;
+  --text-tertiary: #a0aab8;
+  --gold-accent: #c89b3c;
+  --green-status: #4ade80;
+  --border-subtle: rgba(15, 39, 68, 0.08);
+  --grid-line: rgba(15, 39, 68, 0.04);
+  --shadow-button: rgba(15, 39, 68, 0.25);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body { background: var(--bg-base); color: var(--text-primary); font-family: 'Noto Sans JP', sans-serif; min-height: 100vh; min-height: 100dvh; }
+body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 1; }
+.app { position: relative; z-index: 10; height: 100vh; height: 100dvh; display: flex; flex-direction: column; padding: env(safe-area-inset-top, 20px) 20px env(safe-area-inset-bottom, 20px); max-width: 480px; margin: 0 auto; }
+.header { padding: 24px 4px 16px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: flex-end; }
+.brand-logo { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.15em; color: var(--navy-deep); line-height: 1; }
+.brand-sub { font-family: 'Shippori Mincho', serif; font-size: 11px; color: var(--text-secondary); letter-spacing: 0.3em; margin-top: 4px; }
+.status { display: flex; align-items: center; gap: 8px; font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 0.15em; color: var(--text-secondary); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green-status); box-shadow: 0 0 8px rgba(74, 222, 128, 0.6); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.date-bar { padding: 20px 4px; display: flex; justify-content: space-between; align-items: center; }
+.date-main { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: var(--navy-deep); letter-spacing: 0.05em; line-height: 1; }
+.date-sub { text-align: right; }
+.date-year { font-family: 'Shippori Mincho', serif; font-size: 14px; color: var(--text-secondary); letter-spacing: 0.1em; }
+.date-weekday { font-family: 'Shippori Mincho', serif; font-size: 18px; color: var(--text-primary); letter-spacing: 0.1em; margin-top: 4px; }
+.main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 0; position: relative; }
+.button-area { display: flex; flex-direction: column; align-items: center; gap: 24px; transition: opacity 0.6s ease, transform 0.6s ease; }
+.button-area.hidden { opacity: 0; transform: scale(0.9); pointer-events: none; position: absolute; }
+.theme-label { font-family: 'Shippori Mincho', serif; font-size: 14px; color: var(--gold-accent); letter-spacing: 0.4em; opacity: 0.95; }
+.main-button { width: 240px; height: 240px; border-radius: 50%; border: none; background: radial-gradient(circle at 30% 30%, var(--navy-mid) 0%, var(--navy) 50%, var(--navy-deep) 100%); color: #ffffff; font-family: 'Shippori Mincho', serif; font-size: 22px; font-weight: 500; letter-spacing: 0.3em; cursor: pointer; position: relative; box-shadow: 0 20px 40px var(--shadow-button), 0 6px 16px rgba(15, 39, 68, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.15), inset 0 -2px 6px rgba(0, 0, 0, 0.25); transition: transform 0.2s; }
+.main-button::before { content: ''; position: absolute; inset: -8px; border: 1px solid var(--navy-soft); border-radius: 50%; opacity: 0.25; animation: ringRotate 20s linear infinite; }
+.main-button::after { content: ''; position: absolute; inset: -16px; border: 1px dashed var(--navy-soft); border-radius: 50%; opacity: 0.18; animation: ringRotate 30s linear infinite reverse; }
+@keyframes ringRotate { to { transform: rotate(360deg); } }
+.main-button:active { transform: scale(0.95); }
+.button-hint { font-family: 'Bebas Neue', sans-serif; font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.3em; margin-top: 8px; }
+.content-area { width: 100%; max-width: 480px; opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease 0.3s, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
+.content-area.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.theme-tag { font-family: 'Shippori Mincho', serif; font-size: 13px; color: var(--gold-accent); letter-spacing: 0.4em; margin-bottom: 32px; position: relative; padding: 0 24px; }
+.theme-tag::before, .theme-tag::after { content: ''; position: absolute; top: 50%; width: 12px; height: 1px; background: var(--gold-accent); opacity: 0.5; }
+.theme-tag::before { left: 0; }
+.theme-tag::after { right: 0; }
+.content-text { font-family: 'Shippori Mincho', serif; font-size: 22px; line-height: 2.0; color: var(--navy-deep); text-align: center; white-space: pre-line; letter-spacing: 0.05em; font-weight: 500; padding: 0 16px; }
+.reset-button { margin-top: 40px; background: transparent; border: 1px solid var(--navy-soft); color: var(--navy); font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 0.3em; padding: 12px 32px; cursor: pointer; border-radius: 2px; }
+.reset-button:active { background: rgba(15, 39, 68, 0.04); transform: scale(0.97); }
+.footer { text-align: center; padding: 16px 0 4px; border-top: 1px solid var(--border-subtle); }
+.footer-text { font-family: 'Shippori Mincho', serif; font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.2em; opacity: 0.85; }
+@media (max-height: 700px) { .main-button { width: 200px; height: 200px; font-size: 18px; } .date-main { font-size: 36px; } .content-text { font-size: 20px; } }
 </style>
 </head>
 <body>
-
-<div class="container">
-
-  <!-- ヘッダー -->
-  <div class="header">
-    <div class="header-logo">A T S</div>
-    <div class="header-date" id="today-date">読み込み中...</div>
-  </div>
-
-  <!-- 曜日テーマバッジ -->
-  <div class="day-badge" id="day-badge">
-    <span id="day-emoji">📅</span>
-    <span id="day-theme">読み込み中</span>
-  </div>
-
-  <!-- ボタン -->
-  <div class="btn-wrapper">
-    <button class="btn-main" id="btn-main" onclick="showWord()">
-      <span class="btn-icon">💬</span>
-      <span class="btn-label">ひとこと</span>
-    </button>
-  </div>
-
-  <!-- カード -->
-  <div class="card" id="card">
-    <div class="card-theme" id="card-theme"></div>
-    <div class="card-word" id="card-word"></div>
-    <div class="card-desc" id="card-desc"></div>
-  </div>
-
-  <!-- フッター -->
-  <div class="footer">ATS BACK OFFICE · 今日のひとこと</div>
-
+<div class="app">
+<header class="header">
+<div>
+<div class="brand-logo">A・T・S</div>
+<div class="brand-sub">今日のひとこと</div>
 </div>
-
+<div class="status"><span class="status-dot"></span><span>ON DUTY</span></div>
+</header>
+<div class="date-bar">
+<div class="date-main" id="dateMain">--/--</div>
+<div class="date-sub">
+<div class="date-year" id="dateYear">----</div>
+<div class="date-weekday" id="dateWeekday">--曜日</div>
+</div>
+</div>
+<main class="main">
+<div class="button-area" id="buttonArea">
+<div class="theme-label" id="themeLabel">本日の言葉</div>
+<button class="main-button" id="mainButton">ひとこと</button>
+<div class="button-hint">TAP TO REVEAL</div>
+</div>
+<div class="content-area" id="contentArea">
+<div class="theme-tag" id="themeTag"></div>
+<div class="content-text" id="contentText"></div>
+<button class="reset-button" id="resetButton">CLOSE</button>
+</div>
+</main>
+<footer class="footer">
+<div class="footer-text">ATセキュリティ ・ 凡事徹底</div>
+</footer>
+</div>
 <script>
-const DAY_NAMES = ['日', '月', '火', '水', '木', '金', '土'];
-const DAY_EMOJIS = {
-  '月': '🎯', '火': '✍️', '水': '💡', '木': '🗣️', '金': '🎉', '土': '😄', '日': '🌸'
-};
-
-let content = null;
-let shown = false;
-
-// 今日の曜日インデックスを取得（1月1日から何番目の「この曜日」か）
-function getDayIndex() {
+const WEEKDAY_JP = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];
+let contentData = null;
+let isRevealed = false;
+function updateDateDisplay() {
   const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 1);
-  const dayOfYear = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-  return Math.floor(dayOfYear / 7);
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const year = now.getFullYear();
+  const weekdayJP = WEEKDAY_JP[now.getDay()];
+  document.getElementById('dateMain').textContent = `${month}/${day}`;
+  document.getElementById('dateYear').textContent = year;
+  document.getElementById('dateWeekday').textContent = weekdayJP;
+  return { key: `${month}-${day}` };
 }
-
-// 日付表示
-function setupDate() {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = now.getMonth() + 1;
-  const d = now.getDate();
-  const dayName = DAY_NAMES[now.getDay()];
-  document.getElementById('today-date').textContent = `${y}年${m}月${d}日（${dayName}）`;
-  return dayName;
-}
-
-// バッジ設定
-function setupBadge(dayName) {
-  const themeMap = {
-    '月': '凡事徹底', '火': '警備俳句', '水': '偉人の言葉',
-    '木': '先輩の声', '金': '週末前', '土': 'ふざけ系', '日': '川柳'
-  };
-  document.getElementById('day-emoji').textContent = DAY_EMOJIS[dayName] || '📅';
-  document.getElementById('day-theme').textContent = `今日のテーマ：${themeMap[dayName] || dayName}`;
-}
-
-// ひとことを表示
-function showWord() {
-  if (!content) return;
-
-  const now = new Date();
-  const dayName = DAY_NAMES[now.getDay()];
-  const pool = content[dayName];
-  if (!pool || pool.length === 0) return;
-
-  const idx = getDayIndex() % pool.length;
-  const item = pool[idx];
-
-  const card = document.getElementById('card');
-  card.classList.remove('show', 'animate');
-
-  setTimeout(() => {
-    document.getElementById('card-theme').textContent = item.テーマ;
-    document.getElementById('card-word').textContent = item.言葉;
-    document.getElementById('card-desc').textContent = item.解説;
-    card.classList.add('show', 'animate');
-  }, shown ? 100 : 0);
-
-  shown = true;
-}
-
-// content.json を読み込み
 async function loadContent() {
   try {
-    const res = await fetch('content.json');
-    content = await res.json();
-  } catch (e) {
-    console.error('content.json の読み込みに失敗しました', e);
+    const r = await fetch('content.json');
+    contentData = await r.json();
+  } catch (e) { contentData = {}; }
+}
+function setTodaysTheme() {
+  const { key } = updateDateDisplay();
+  if (contentData && contentData[key]) {
+    const theme = contentData[key].theme;
+    const themeName = theme.split('・')[1] || theme;
+    document.getElementById('themeLabel').textContent = themeName;
   }
 }
-
-// 初期化
+function reveal() {
+  if (isRevealed) return;
+  isRevealed = true;
+  const { key } = updateDateDisplay();
+  const data = contentData && contentData[key];
+  if (!data) {
+    document.getElementById('themeTag').textContent = '本日のひとこと';
+    document.getElementById('contentText').textContent = '今日も、一日お疲れ様です。';
+  } else {
+    document.getElementById('themeTag').textContent = data.theme;
+    document.getElementById('contentText').textContent = data.content;
+  }
+  document.getElementById('buttonArea').classList.add('hidden');
+  document.getElementById('contentArea').classList.add('visible');
+  if (navigator.vibrate) navigator.vibrate(20);
+}
+function reset() {
+  isRevealed = false;
+  document.getElementById('contentArea').classList.remove('visible');
+  document.getElementById('buttonArea').classList.remove('hidden');
+}
+document.getElementById('mainButton').addEventListener('click', reveal);
+document.getElementById('resetButton').addEventListener('click', reset);
 (async () => {
-  const dayName = setupDate();
-  setupBadge(dayName);
+  updateDateDisplay();
   await loadContent();
+  setTodaysTheme();
 })();
 </script>
-
 </body>
 </html>
