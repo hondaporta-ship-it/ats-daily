@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATS 今日のひとこと</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f4f5f7;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: #1a2744;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+  }
+
+  /* ヘッダー */
+  .header {
+    margin-bottom: 40px;
+  }
+
+  .header-logo {
+    display: inline-block;
+    background: #1a2744;
+    color: white;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    padding: 6px 16px;
+    margin-bottom: 12px;
+  }
+
+  .header-date {
+    font-size: 13px;
+    color: #6b7280;
+    letter-spacing: 1px;
+  }
+
+  /* メインボタン */
+  .btn-wrapper {
+    margin-bottom: 48px;
+  }
+
+  .btn-main {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: #1a2744;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: 0 8px 32px rgba(26, 39, 68, 0.25);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-main::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .btn-main:hover {
+    transform: scale(1.04);
+    box-shadow: 0 12px 40px rgba(26, 39, 68, 0.35);
+  }
+
+  .btn-main:hover::before { opacity: 1; }
+
+  .btn-main:active {
+    transform: scale(0.97);
+  }
+
+  .btn-icon {
+    font-size: 36px;
+    line-height: 1;
+  }
+
+  .btn-label {
+    color: white;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 3px;
+  }
+
+  /* カード */
+  .card {
+    background: white;
+    border-radius: 2px;
+    padding: 36px 32px;
+    box-shadow: 0 2px 16px rgba(26, 39, 68, 0.08);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: all 0.4s ease;
+    display: none;
+    text-align: left;
+  }
+
+  .card.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .card-theme {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: #6b7280;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-theme::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 14px;
+    background: #1a2744;
+    border-radius: 2px;
+  }
+
+  .card-word {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.8;
+    color: #1a2744;
+    margin-bottom: 20px;
+    white-space: pre-line;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.8;
+    padding-top: 16px;
+    border-top: 1px solid #f3f4f6;
+  }
+
+  /* 曜日バッジ */
+  .day-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f3f4f6;
+    color: #4b5563;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    letter-spacing: 1px;
+  }
+
+  /* フッター */
+  .footer {
+    margin-top: 48px;
+    font-size: 11px;
+    color: #9ca3af;
+    letter-spacing: 2px;
+  }
+
+  /* アニメーション */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card.animate {
+    animation: fadeInUp 0.4s ease forwards;
+  }
+
+  /* モバイル調整 */
+  @media (max-width: 480px) {
+    .btn-main { width: 140px; height: 140px; }
+    .btn-icon { font-size: 30px; }
+    .btn-label { font-size: 14px; }
+    .card-word { font-size: 17px; }
+    .card { padding: 28px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ヘッダー -->
+  <div class="header">
+    <div class="header-logo">A T S</div>
+    <div class="header-date" id="today-date">読み込み中...</div>
+  </div>
+
+  <!-- 曜日テーマバッジ -->
+  <div class="day-badge" id="day-badge">
+    <span id="day-emoji">📅</span>
+    <span id="day-theme">読み込み中</span>
+  </div>
+
+  <!-- ボタン -->
+  <div class="btn-wrapper">
+    <button class="btn-main" id="btn-main" onclick="showWord()">
+      <span class="btn-icon">💬</span>
+      <span class="btn-label">ひとこと</span>
+    </button>
+  </div>
+
+  <!-- カード -->
+  <div class="card" id="card">
+    <div class="card-theme" id="card-theme"></div>
+    <div class="card-word" id="card-word"></div>
+    <div class="card-desc" id="card-desc"></div>
+  </div>
+
+  <!-- フッター -->
+  <div class="footer">ATS BACK OFFICE · 今日のひとこと</div>
+
+</div>
+
+<script>
+const DAY_NAMES = ['日', '月', '火', '水', '木', '金', '土'];
+const DAY_EMOJIS = {
+  '月': '🎯', '火': '✍️', '水': '💡', '木': '🗣️', '金': '🎉', '土': '😄', '日': '🌸'
+};
+
+let content = null;
+let shown = false;
+
+// 今日の曜日インデックスを取得（1月1日から何番目の「この曜日」か）
+function getDayIndex() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1);
+  const dayOfYear = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  return Math.floor(dayOfYear / 7);
+}
+
+// 日付表示
+function setupDate() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth() + 1;
+  const d = now.getDate();
+  const dayName = DAY_NAMES[now.getDay()];
+  document.getElementById('today-date').textContent = `${y}年${m}月${d}日（${dayName}）`;
+  return dayName;
+}
+
+// バッジ設定
+function setupBadge(dayName) {
+  const themeMap = {
+    '月': '凡事徹底', '火': '警備俳句', '水': '偉人の言葉',
+    '木': '先輩の声', '金': '週末前', '土': 'ふざけ系', '日': '川柳'
+  };
+  document.getElementById('day-emoji').textContent = DAY_EMOJIS[dayName] || '📅';
+  document.getElementById('day-theme').textContent = `今日のテーマ：${themeMap[dayName] || dayName}`;
+}
+
+// ひとことを表示
+function showWord() {
+  if (!content) return;
+
+  const now = new Date();
+  const dayName = DAY_NAMES[now.getDay()];
+  const pool = content[dayName];
+  if (!pool || pool.length === 0) return;
+
+  const idx = getDayIndex() % pool.length;
+  const item = pool[idx];
+
+  const card = document.getElementById('card');
+  card.classList.remove('show', 'animate');
+
+  setTimeout(() => {
+    document.getElementById('card-theme').textContent = item.テーマ;
+    document.getElementById('card-word').textContent = item.言葉;
+    document.getElementById('card-desc').textContent = item.解説;
+    card.classList.add('show', 'animate');
+  }, shown ? 100 : 0);
+
+  shown = true;
+}
+
+// content.json を読み込み
+async function loadContent() {
+  try {
+    const res = await fetch('content.json');
+    content = await res.json();
+  } catch (e) {
+    console.error('content.json の読み込みに失敗しました', e);
+  }
+}
+
+// 初期化
+(async () => {
+  const dayName = setupDate();
+  setupBadge(dayName);
+  await loadContent();
+})();
+</script>
+
+</body>
+</html>
