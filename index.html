@@ -2,157 +2,760 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#f4f5f7">
-<title>ATS 今日のひとこと</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#f7f6f2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="今日のひとこと">
+<title>A・T・S 今日のひとこと</title>
+<link rel="manifest" href="manifest.json">
 <style>
+@charset "UTF-8";
+
 :root {
-  --bg-base: #f4f5f7;
-  --navy-deep: #0f2744;
+  --bg: #f7f6f2;
+  --card: #ffffff;
+  --grid: rgba(15, 39, 68, 0.04);
   --navy: #1a3a5c;
-  --navy-mid: #2d5278;
-  --navy-soft: #5b7a9b;
-  --text-primary: #1a2433;
-  --text-secondary: #6b7a8c;
-  --text-tertiary: #a0aab8;
-  --gold-accent: #c89b3c;
-  --green-status: #4ade80;
-  --border-subtle: rgba(15, 39, 68, 0.08);
-  --grid-line: rgba(15, 39, 68, 0.04);
-  --shadow-button: rgba(15, 39, 68, 0.25);
+  --navy-deep: #0f2744;
+  --navy-soft: rgba(26, 58, 92, 0.08);
+  --gold: #c89b3c;
+  --gold-soft: rgba(200, 155, 60, 0.12);
+  --text: #2a2a2a;
+  --text-mid: #6b6b6b;
+  --text-light: #999;
+  --text-muted: #b8b8b8;
+  --a-color: #1a3a5c;
+  --a-soft: rgba(26, 58, 92, 0.12);
+  --a-glow: rgba(26, 58, 92, 0.2);
+  --b-color: #c89b3c;
+  --b-soft: rgba(200, 155, 60, 0.15);
+  --b-glow: rgba(200, 155, 60, 0.25);
+  --border: rgba(15, 39, 68, 0.1);
+  --border-strong: rgba(15, 39, 68, 0.2);
 }
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; overflow: hidden; }
-body { background: var(--bg-base); color: var(--text-primary); font-family: 'Noto Sans JP', sans-serif; min-height: 100vh; min-height: 100dvh; }
-body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 1; }
-.app { position: relative; z-index: 10; height: 100vh; height: 100dvh; display: flex; flex-direction: column; padding: env(safe-area-inset-top, 20px) 20px env(safe-area-inset-bottom, 20px); max-width: 480px; margin: 0 auto; }
-.header { padding: 24px 4px 16px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: flex-end; }
-.brand-logo { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.15em; color: var(--navy-deep); line-height: 1; }
-.brand-sub { font-family: 'Shippori Mincho', serif; font-size: 11px; color: var(--text-secondary); letter-spacing: 0.3em; margin-top: 4px; }
-.status { display: flex; align-items: center; gap: 8px; font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 0.15em; color: var(--text-secondary); }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green-status); box-shadow: 0 0 8px rgba(74, 222, 128, 0.6); animation: pulse 2s ease-in-out infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-.date-bar { padding: 20px 4px; display: flex; justify-content: space-between; align-items: center; }
-.date-main { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: var(--navy-deep); letter-spacing: 0.05em; line-height: 1; }
-.date-sub { text-align: right; }
-.date-year { font-family: 'Shippori Mincho', serif; font-size: 14px; color: var(--text-secondary); letter-spacing: 0.1em; }
-.date-weekday { font-family: 'Shippori Mincho', serif; font-size: 18px; color: var(--text-primary); letter-spacing: 0.1em; margin-top: 4px; }
-.main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 0; position: relative; }
-.button-area { display: flex; flex-direction: column; align-items: center; gap: 24px; transition: opacity 0.6s ease, transform 0.6s ease; }
-.button-area.hidden { opacity: 0; transform: scale(0.9); pointer-events: none; position: absolute; }
-.theme-label { font-family: 'Shippori Mincho', serif; font-size: 14px; color: var(--gold-accent); letter-spacing: 0.4em; opacity: 0.95; }
-.main-button { width: 240px; height: 240px; border-radius: 50%; border: none; background: radial-gradient(circle at 30% 30%, var(--navy-mid) 0%, var(--navy) 50%, var(--navy-deep) 100%); color: #ffffff; font-family: 'Shippori Mincho', serif; font-size: 22px; font-weight: 500; letter-spacing: 0.3em; cursor: pointer; position: relative; box-shadow: 0 20px 40px var(--shadow-button), 0 6px 16px rgba(15, 39, 68, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.15), inset 0 -2px 6px rgba(0, 0, 0, 0.25); transition: transform 0.2s; }
-.main-button::before { content: ''; position: absolute; inset: -8px; border: 1px solid var(--navy-soft); border-radius: 50%; opacity: 0.25; animation: ringRotate 20s linear infinite; }
-.main-button::after { content: ''; position: absolute; inset: -16px; border: 1px dashed var(--navy-soft); border-radius: 50%; opacity: 0.18; animation: ringRotate 30s linear infinite reverse; }
-@keyframes ringRotate { to { transform: rotate(360deg); } }
-.main-button:active { transform: scale(0.95); }
-.button-hint { font-family: 'Bebas Neue', sans-serif; font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.3em; margin-top: 8px; }
-.content-area { width: 100%; max-width: 480px; opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease 0.3s, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
-.content-area.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-.theme-tag { font-family: 'Shippori Mincho', serif; font-size: 13px; color: var(--gold-accent); letter-spacing: 0.4em; margin-bottom: 32px; position: relative; padding: 0 24px; }
-.theme-tag::before, .theme-tag::after { content: ''; position: absolute; top: 50%; width: 12px; height: 1px; background: var(--gold-accent); opacity: 0.5; }
-.theme-tag::before { left: 0; }
-.theme-tag::after { right: 0; }
-.content-text { font-family: 'Shippori Mincho', serif; font-size: 22px; line-height: 2.0; color: var(--navy-deep); text-align: center; white-space: pre-line; letter-spacing: 0.05em; font-weight: 500; padding: 0 16px; }
-.reset-button { margin-top: 40px; background: transparent; border: 1px solid var(--navy-soft); color: var(--navy); font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 0.3em; padding: 12px 32px; cursor: pointer; border-radius: 2px; }
-.reset-button:active { background: rgba(15, 39, 68, 0.04); transform: scale(0.97); }
-.footer { text-align: center; padding: 16px 0 4px; border-top: 1px solid var(--border-subtle); }
-.footer-text { font-family: 'Shippori Mincho', serif; font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.2em; opacity: 0.85; }
-@media (max-height: 700px) { .main-button { width: 200px; height: 200px; font-size: 18px; } .date-main { font-size: 36px; } .content-text { font-size: 20px; } }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--text);
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Shippori Mincho', 'Noto Serif JP', 'Noto Serif CJK JP', serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* Header — left/right layout (original) */
+.header {
+  width: 100%;
+  padding: 28px 24px 0;
+  flex-shrink: 0;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 22px;
+}
+
+.brand-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.brand {
+  font-family: 'Helvetica Neue', 'Inter', 'SF Pro Display', sans-serif;
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--navy-deep);
+  margin-bottom: 6px;
+  transform: scaleX(0.65);
+  transform-origin: left center;
+  display: inline-block;
+}
+
+.brand-sub {
+  font-size: 12px;
+  color: var(--text-mid);
+  letter-spacing: 0.3em;
+  font-weight: 400;
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', 'Noto Serif CJK JP', serif;
+}
+
+.duty-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Helvetica Neue', 'Inter', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  color: var(--navy-deep);
+  font-weight: 600;
+  padding-bottom: 2px;
+}
+
+.duty-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #10b981;
+  position: relative;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
+  animation: heartbeat 1.4s ease-in-out infinite;
+}
+
+.duty-dot::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.4);
+  animation: heartbeat-pulse 1.4s ease-out infinite;
+  z-index: -1;
+}
+
+@keyframes heartbeat {
+  0%   { transform: scale(1);    box-shadow: 0 0 8px rgba(16, 185, 129, 0.7); }
+  10%  { transform: scale(1.35); box-shadow: 0 0 14px rgba(16, 185, 129, 0.9); }
+  20%  { transform: scale(1.0);  box-shadow: 0 0 8px rgba(16, 185, 129, 0.7); }
+  30%  { transform: scale(1.25); box-shadow: 0 0 12px rgba(16, 185, 129, 0.85); }
+  45%  { transform: scale(0.85); box-shadow: 0 0 6px rgba(16, 185, 129, 0.5); }
+  100% { transform: scale(1);    box-shadow: 0 0 8px rgba(16, 185, 129, 0.7); }
+}
+
+@keyframes heartbeat-pulse {
+  0%   { transform: scale(1);   opacity: 0.4; }
+  10%  { transform: scale(1.6); opacity: 0.5; }
+  30%  { transform: scale(1.4); opacity: 0.3; }
+  60%  { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(1);   opacity: 0; }
+}
+
+.header-divider {
+  height: 1px;
+  background: var(--border-strong);
+  margin-bottom: 18px;
+}
+
+.date-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.date-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-mmdd {
+  font-family: 'Helvetica Neue', 'Inter', 'SF Pro Display', sans-serif;
+  font-size: 48px;
+  font-weight: 600;
+  color: var(--navy-deep);
+  letter-spacing: 0.05em;
+  line-height: 1;
+  transform: scaleX(0.65);
+  transform-origin: left center;
+  display: inline-block;
+}
+
+.date-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.date-year {
+  font-family: 'Helvetica Neue', 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text-light);
+  letter-spacing: 0.2em;
+  font-weight: 400;
+}
+
+.date-dow {
+  font-size: 24px;
+  color: var(--navy-deep);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', 'Noto Serif CJK JP', serif;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Main */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+  position: relative;
+}
+
+/* "本日の言葉" label above the circle */
+.circle-label {
+  font-size: 17px;
+  color: var(--gold);
+  letter-spacing: 0.5em;
+  font-weight: 500;
+  text-align: center;
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', 'Noto Serif CJK JP', serif;
+  padding-left: 0.5em;
+}
+
+/* タップしてね hint below the circle */
+.circle-tap-hint {
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', 'Noto Serif CJK JP', serif;
+  font-size: 13px;
+  letter-spacing: 0.25em;
+  color: var(--text-mid);
+  font-weight: 400;
+  text-align: center;
+}
+
+/* Reveal screen — main */
+.reveal-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 480px;
+}
+
+/* Center circle button — original UI, never change */
+.reveal-btn {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  color: var(--card);
+  position: relative;
+  transition: transform 0.2s, background 0.4s;
+  box-shadow: 0 8px 32px rgba(15, 39, 68, 0.2);
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+}
+
+.reveal-btn:active {
+  transform: scale(0.95);
+}
+
+/* Inner thin border line (static) */
+.reveal-btn-inner-line {
+  position: absolute;
+  width: 234px;
+  height: 234px;
+  border-radius: 50%;
+  border: 1px solid rgba(15, 39, 68, 0.15);
+  pointer-events: none;
+}
+
+/* Outer dashed circle (slow counter-clockwise rotation) */
+.reveal-btn-dashes {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  border: 1px dashed rgba(15, 39, 68, 0.22);
+  pointer-events: none;
+  animation: dashes-rotate 60s linear infinite reverse;
+}
+
+@keyframes dashes-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Shuffle animation when AI picks */
+.reveal-btn.shuffling {
+  animation: shuffle 0.6s ease-out;
+}
+
+@keyframes shuffle {
+  0% { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%); }
+  20% { background: linear-gradient(135deg, var(--gold) 0%, #a87a1f 100%); }
+  40% { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%); }
+  60% { background: linear-gradient(135deg, var(--gold) 0%, #a87a1f 100%); }
+  80% { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%); }
+  100% { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%); }
+}
+
+.reveal-btn.locked-a {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+}
+
+.reveal-btn.locked-b {
+  background: linear-gradient(135deg, var(--gold) 0%, #a87a1f 100%);
+}
+
+.reveal-btn-label {
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Shippori Mincho', 'Noto Serif JP', 'Noto Serif CJK JP', serif;
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+}
+
+.reveal-btn-tap {
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  opacity: 0.7;
+  font-family: 'Helvetica Neue', sans-serif;
+  margin-top: 8px;
+}
+
+/* Mode chips below circle */
+.mode-chips {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.mode-chip {
+  padding: 8px 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mode-chip:active {
+  transform: scale(0.95);
+}
+
+.mode-chip.a-chip:hover,
+.mode-chip.a-chip:active {
+  border-color: var(--a-color);
+  color: var(--a-color);
+  background: var(--a-soft);
+}
+
+.mode-chip.b-chip:hover,
+.mode-chip.b-chip:active {
+  border-color: var(--b-color);
+  color: var(--b-color);
+  background: var(--b-soft);
+}
+
+.chip-divider {
+  width: 1px;
+  height: 14px;
+  background: var(--border-strong);
+}
+
+/* Hint text below chips */
+.chip-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.15em;
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* Mode badge — shown after reveal */
+.mode-badge {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  display: none;
+}
+
+.mode-badge.a {
+  background: var(--a-soft);
+  color: var(--a-color);
+  display: inline-block;
+}
+
+.mode-badge.b {
+  background: var(--b-soft);
+  color: var(--b-color);
+  display: inline-block;
+}
+
+/* Word display */
+.word-display {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 32px 26px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(15, 39, 68, 0.08);
+  animation: fadeInUp 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.word-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.word-display.a-mode::before {
+  background: linear-gradient(90deg, var(--navy), var(--gold));
+}
+
+.word-display.b-mode::before {
+  background: linear-gradient(90deg, var(--gold), #a87a1f);
+}
+
+.word-day-label {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--text-light);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.word-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--navy-deep);
+  margin-bottom: 14px;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.word-body {
+  font-size: 15px;
+  line-height: 2;
+  color: var(--text);
+  text-align: center;
+  white-space: pre-wrap;
+}
+
+.word-body.a-mode {
+  font-size: 17px;
+  line-height: 2.1;
+  font-weight: 400;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Footer */
+.footer {
+  width: 100%;
+  padding: 16px 24px 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.footer-text {
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.footer-divider {
+  display: inline-block;
+  margin: 0 10px;
+  color: var(--gold);
+}
+
+@media (max-width: 380px) {
+  .brand { font-size: 20px; letter-spacing: 0.3em; }
+  .reveal-btn { width: 200px; height: 200px; }
+  .reveal-btn-label { font-size: 22px; }
+  .word-display { padding: 26px 20px; }
+  .word-body { font-size: 14px; }
+  .word-body.a-mode { font-size: 16px; }
+  .mode-chip { font-size: 12px; padding: 7px 14px; }
+}
+
+@media (max-height: 700px) {
+  .header { padding-top: 20px; }
+  .brand-sub { margin-bottom: 16px; }
+  .reveal-screen { gap: 14px; }
+}
 </style>
 </head>
 <body>
-<div class="app">
+
 <header class="header">
-<div>
-<div class="brand-logo">A・T・S</div>
-<div class="brand-sub">今日のひとこと</div>
-</div>
-<div class="status"><span class="status-dot"></span><span>ON DUTY</span></div>
+  <div class="header-top">
+    <div class="brand-block">
+      <div class="brand">A・T・S</div>
+      <div class="brand-sub">今日のひとこと</div>
+    </div>
+    <span class="duty-status">
+      <span class="duty-dot"></span>
+      ON DUTY
+    </span>
+  </div>
+  <div class="header-divider"></div>
+  <div class="date-row">
+    <div class="date-left">
+      <span class="date-mmdd" id="dateMmdd">--/--</span>
+    </div>
+    <div class="date-right">
+      <span class="date-year" id="dateYear">----</span>
+      <span class="date-dow" id="dateDow">---</span>
+    </div>
+  </div>
 </header>
-<div class="date-bar">
-<div class="date-main" id="dateMain">--/--</div>
-<div class="date-sub">
-<div class="date-year" id="dateYear">----</div>
-<div class="date-weekday" id="dateWeekday">--曜日</div>
-</div>
-</div>
+
 <main class="main">
-<div class="button-area" id="buttonArea">
-<div class="theme-label" id="themeLabel">本日の言葉</div>
-<button class="main-button" id="mainButton">ひとこと</button>
-<div class="button-hint">TAP TO REVEAL</div>
-</div>
-<div class="content-area" id="contentArea">
-<div class="theme-tag" id="themeTag"></div>
-<div class="content-text" id="contentText"></div>
-<button class="reset-button" id="resetButton">CLOSE</button>
-</div>
+  <div class="reveal-screen" id="revealScreen">
+    <div class="mode-badge" id="modeBadge"></div>
+    <div class="circle-label" id="circleLabel">本日の言葉</div>
+    <button class="reveal-btn" id="revealBtn">
+      <span class="reveal-btn-inner-line"></span>
+      <span class="reveal-btn-dashes"></span>
+      <span class="reveal-btn-label">ひとこと</span>
+    </button>
+    <div class="circle-tap-hint">タップしてね</div>
+    <div class="mode-chips" id="modeChips">
+      <button class="mode-chip a-chip" data-mode="a">キリッと</button>
+      <span class="chip-divider"></span>
+      <button class="mode-chip b-chip" data-mode="b">クスッと</button>
+    </div>
+    <div class="chip-hint" id="chipHint">気分で選ぶ・円でおまかせ</div>
+  </div>
 </main>
+
 <footer class="footer">
-<div class="footer-text">ATセキュリティ ・ 凡事徹底</div>
+  <div class="footer-text">
+    A T セキュリティ
+    <span class="footer-divider">・</span>
+    <span id="footerTagline">AI同好会</span>
+  </div>
 </footer>
-</div>
+
 <script>
-const WEEKDAY_JP = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];
-let contentData = null;
-let isRevealed = false;
-function updateDateDisplay() {
+// Embedded data
+const kirittoData = [{"id": 17, "day": "月", "theme": "凡事徹底", "words": "丁寧は、最大の武器。", "source": "C"}, {"id": 14, "day": "月", "theme": "凡事徹底", "words": "敬礼に、嘘はつけない。", "source": "C"}, {"id": 373, "day": "月", "theme": "凡事徹底", "words": "立ち姿が、ATSの顔。", "source": "O"}, {"id": 18, "day": "月", "theme": "凡事徹底", "words": "焦らず、慌てず、諦めず。", "source": "C"}, {"id": 45, "day": "月", "theme": "凡事徹底", "words": "目配り、気配り、心配り。", "source": "C"}, {"id": 51, "day": "月", "theme": "凡事徹底", "words": "今日も、淡々と、丁寧に。", "source": "C"}, {"id": 43, "day": "月", "theme": "凡事徹底", "words": "現場で迷ったら、原則に戻れ。", "source": "C"}, {"id": 371, "day": "月", "theme": "凡事徹底", "words": "靴をそろえると、心もそろう。", "source": "O"}, {"id": 366, "day": "月", "theme": "凡事徹底", "words": "時間を守るのは、信頼を守ること。", "source": "O"}, {"id": 381, "day": "月", "theme": "凡事徹底", "words": "小さな誠実が、大きな信頼を作る。", "source": "O"}, {"id": 6, "day": "月", "theme": "凡事徹底", "words": "凡事徹底。\n地味な毎日に、誇りを。", "source": "C"}, {"id": 369, "day": "月", "theme": "凡事徹底", "words": "「いつもどおり」こそ、最高の仕事。", "source": "O"}, {"id": 374, "day": "月", "theme": "凡事徹底", "words": "記録は記憶に勝る。必ずメモを取れ。", "source": "O"}, {"id": 62, "day": "火", "theme": "警備俳句", "words": "新人の\n敬礼角度\n90度", "source": "C"}, {"id": 385, "day": "火", "theme": "警備俳句", "words": "人の波　さばく腕に　汗光る", "source": "O"}, {"id": 59, "day": "火", "theme": "警備俳句", "words": "巡回中\n猫と目が合う\n相棒だ", "source": "C"}, {"id": 78, "day": "火", "theme": "警備俳句", "words": "夜勤明け\n太陽眩しい\n帰り道", "source": "C"}, {"id": 382, "day": "火", "theme": "警備俳句", "words": "誘導棒　赤く染まりし　夕現場", "source": "O"}, {"id": 390, "day": "火", "theme": "警備俳句", "words": "夏祭り　警備の陰に　安心あり", "source": "O"}, {"id": 391, "day": "火", "theme": "警備俳句", "words": "冬の朝　息白くして　上番かな", "source": "O"}, {"id": 395, "day": "火", "theme": "警備俳句", "words": "雑踏の　海渡る如く　さばく手", "source": "O"}, {"id": 86, "day": "火", "theme": "警備俳句", "words": "雨上がり\n虹を見ながら\n立哨中", "source": "C"}, {"id": 91, "day": "火", "theme": "警備俳句", "words": "新人が\n敬礼の練習\n微笑ましい", "source": "C"}, {"id": 99, "day": "火", "theme": "警備俳句", "words": "夜の街\n誰かが眠り\n誰かが守る", "source": "C"}, {"id": 383, "day": "火", "theme": "警備俳句", "words": "雨の日も　無線の声は　凜として", "source": "O"}, {"id": 394, "day": "火", "theme": "警備俳句", "words": "笑顔出せ　それが最強の　防護服", "source": "O"}, {"id": 399, "day": "水", "theme": "偉人の言葉", "words": "「継続は力なり」— 松下幸之助", "source": "O"}, {"id": 144, "day": "水", "theme": "偉人の言葉", "words": "「磨穿鉄硯」\n── 古諺\n\n継続は、岩をも穿つ。", "source": "C"}, {"id": 403, "day": "水", "theme": "偉人の言葉", "words": "「人を動かすには、まず自分が動くこと」— 渋沢栄一", "source": "O"}, {"id": 412, "day": "水", "theme": "偉人の言葉", "words": "「問題とは、解決されるために存在する」— 本田宗一郎", "source": "O"}, {"id": 140, "day": "水", "theme": "偉人の言葉", "words": "「一日一善」\n── 古諺\n\n小さな親切を、毎日ひとつ。", "source": "C"}, {"id": 414, "day": "水", "theme": "偉人の言葉", "words": "「言葉より行動が雄弁を語る」— アブラハム・リンカーン", "source": "O"}, {"id": 148, "day": "水", "theme": "偉人の言葉", "words": "「臨機応変」\n── 古諺\n\n警備の現場で最も求められる力。", "source": "C"}, {"id": 154, "day": "水", "theme": "偉人の言葉", "words": "「縁の下の力持ち」\n── 古諺\n\n警備員という仕事の本質。", "source": "C"}, {"id": 410, "day": "水", "theme": "偉人の言葉", "words": "「最も大切なのは、諦めないことだ」— ウォルト・ディズニー", "source": "O"}, {"id": 111, "day": "水", "theme": "偉人の言葉", "words": "「念には念を入れよ」\n── 古諺\n\n警備員の合言葉そのまま。", "source": "C"}, {"id": 145, "day": "水", "theme": "偉人の言葉", "words": "「足るを知る者は富む」\n── 老子\n\n今ある仕事に、誇りを。", "source": "C"}, {"id": 156, "day": "水", "theme": "偉人の言葉", "words": "「無事是貴人」\n── 禅語\n\n何事もない一日こそ、価値がある。", "source": "C"}, {"id": 116, "day": "水", "theme": "偉人の言葉", "words": "「百聞は一見にしかず」\n── 漢書\n\n現場に立たねば、わからない。", "source": "C"}, {"id": 424, "day": "木", "theme": "先輩の声", "words": "「気配りは、経験で磨かれる宝物」", "source": "O"}, {"id": 430, "day": "木", "theme": "先輩の声", "words": "「怒られるうちが花。無視されたら終わり」", "source": "O"}, {"id": 422, "day": "木", "theme": "先輩の声", "words": "「後輩に教えることで、自分の理解が深まった」", "source": "O"}, {"id": 428, "day": "木", "theme": "先輩の声", "words": "「段取り八分、仕事二分。準備が全てを決める」", "source": "O"}, {"id": 420, "day": "木", "theme": "先輩の声", "words": "「ミスをしたとき、正直に報告できる自分でいろ」", "source": "O"}, {"id": 429, "day": "木", "theme": "先輩の声", "words": "「辛い現場を乗り越えた分だけ、自分が分厚くなる」", "source": "O"}, {"id": 178, "day": "木", "theme": "先輩の声", "words": "「制服を着ている時は、ATSの看板を背負っている」", "source": "C"}, {"id": 417, "day": "木", "theme": "先輩の声", "words": "「わからないことは必ず聞け。知ったかぶりが一番危ない」", "source": "O"}, {"id": 173, "day": "木", "theme": "先輩の声", "words": "「敬礼の角度より、目線が大事」\n── マナー指導の先輩より", "source": "C"}, {"id": 202, "day": "木", "theme": "先輩の声", "words": "「現場の挨拶は、お互いの命綱」\n── 安全意識の高い先輩より", "source": "C"}, {"id": 416, "day": "木", "theme": "先輩の声", "words": "「最初の3ヶ月が一番きつい。でもそこを超えたら景色が変わる」", "source": "O"}, {"id": 157, "day": "木", "theme": "先輩の声", "words": "「無線機より、まず挨拶」\n── ATS入社30年のベテランより", "source": "C"}, {"id": 161, "day": "木", "theme": "先輩の声", "words": "「報告は、結論から。理由は後でいい」\n── 元警察官の先輩より", "source": "C"}, {"id": 253, "day": "金", "theme": "週末前", "words": "週末は、家族の顔をしっかり見て。", "source": "C"}, {"id": 250, "day": "金", "theme": "週末前", "words": "週末前の最後の挨拶。\n心を込めて。", "source": "C"}, {"id": 234, "day": "金", "theme": "週末前", "words": "金曜日。\n今週の自分を、ねぎらおう。", "source": "C"}, {"id": 258, "day": "金", "theme": "週末前", "words": "金曜日。\n今週最後の「ご安全に」を。", "source": "C"}, {"id": 260, "day": "金", "theme": "週末前", "words": "今週もお疲れ様でした。\n良い週末を。", "source": "C"}, {"id": 222, "day": "金", "theme": "週末前", "words": "金曜日。\n今日も、いつも通り、丁寧に。", "source": "C"}, {"id": 217, "day": "金", "theme": "週末前", "words": "金曜日。\nあと一日、踏ん張れば、週末だ。", "source": "C"}, {"id": 220, "day": "金", "theme": "週末前", "words": "今週もお疲れ様。\nあなたの制服に、誇りを。", "source": "C"}, {"id": 227, "day": "金", "theme": "週末前", "words": "週末前の最後の現場。\n気を抜かず、丁寧に。", "source": "C"}, {"id": 238, "day": "金", "theme": "週末前", "words": "今週もお疲れさま。\n来週も、よろしく頼む。", "source": "C"}, {"id": 242, "day": "金", "theme": "週末前", "words": "週末は、自分を労わる時間。\n身体も、心も。", "source": "C"}, {"id": 254, "day": "金", "theme": "週末前", "words": "今週もお疲れ様。\nあなたの一週間に、誇りを。", "source": "C"}, {"id": 213, "day": "金", "theme": "週末前", "words": "今週も、無事に終わりそう。\nそれが、一番の勲章。", "source": "C"}, {"id": 1001, "day": "土", "theme": "イベントの流儀", "source": "C", "words": "現場入りの第一歩は、外周を一周。\n前日との差異を、目で確認する。\n─ 現場の鉄則。"}, {"id": 1002, "day": "土", "theme": "イベントの流儀", "source": "C", "words": "鍵を借りたら、解錠は任せる。\n責任者がすべてを抱えると、\n現場が回らなくなる。"}, {"id": 1003, "day": "土", "theme": "イベントの流儀", "source": "C", "words": "現場の温度は、人を変える。\n暑さ寒さで集中が切れたら、\n仕事の質まで落ちる。"}, {"id": 1004, "day": "土", "theme": "イベントの流儀", "source": "C", "words": "本番15分前。\n全員が、各自の持ち場で静かに待つ。\nこの沈黙が、現場を支える。"}, {"id": 1005, "day": "土", "theme": "イベントの流儀", "source": "C", "words": "走らない。\n責任者が走った瞬間、\n現場全体がパニックに変わる。"}, {"id": 1006, "day": "土", "theme": "イベントの流儀", "source": "C", "words": "報告だけで判断しない。\n自分の目で、必ず現場を見る。\n人から聞いた情報は、半分。"}, {"id": 1007, "day": "土", "theme": "イベントの流儀", "source": "C", "words": "判断に迷ったら、\n「こうしたい、いいですか」と聞く。\n「どうしましょう」は、新人の言葉。"}, {"id": 1008, "day": "土", "theme": "イベントの流儀", "source": "C", "words": "本部で動かない人ほど、\n頭の中は120%稼働している。\nそれが、責任者の仕事。"}, {"id": 1009, "day": "土", "theme": "イベントの流儀", "source": "C", "words": "責任者は、危険箇所に立つ。\n一番リスクのある場所が、\n責任者の定位置。"}, {"id": 1010, "day": "土", "theme": "イベントの流儀", "source": "C", "words": "新人に「次、何を」と聞かれたら、\n「気づいたことを、やればいい」と返す。\n3年で、わかるようになる。"}, {"id": 1011, "day": "土", "theme": "イベントの流儀", "source": "C", "words": "現場入り前に、必ず食事を済ませる。\n空腹は、判断を鈍らせる。\n小さなことが、現場を救う。"}, {"id": 1012, "day": "土", "theme": "イベントの流儀", "source": "C", "words": "機材確認、何度やっても、もう一回。\n念には念を、これは現場の鉄則。\n本番中のトラブル、何より怖い。"}, {"id": 2001, "day": "日", "theme": "イベントの流儀", "source": "C", "words": "現場の鉄則。\n日をまたいだ弁当は、絶対食べない。\nもったいなさより、安全。"}, {"id": 2002, "day": "日", "theme": "イベントの流儀", "source": "C", "words": "段取り八分、仕事二分。\n準備が、現場のすべてを決める。\n本番は、答え合わせ。"}, {"id": 2003, "day": "日", "theme": "イベントの流儀", "source": "C", "words": "30年やって見えたこと。\n大事なのは、笑って終われること。\nそれが、すべて。"}, {"id": 2004, "day": "日", "theme": "イベントの流儀", "source": "C", "words": "通しリハーサルの空気感。\n誰もが集中して、無駄な会話がない。\nこの時間が、本番を作る。"}, {"id": 2005, "day": "日", "theme": "イベントの流儀", "source": "C", "words": "時間が遅れそうな時、\nどこで巻き返すかを即決する。\n判断の速さは、経験の蓄積。"}, {"id": 2006, "day": "日", "theme": "イベントの流儀", "source": "C", "words": "客入れの15分前、\n全員で最終チェック。\nここで漏れがあると、開演が遅れる。"}, {"id": 2007, "day": "日", "theme": "イベントの流儀", "source": "C", "words": "搬入トラックの誘導は、\n一台でも順番を間違えると、\n後ろが全部詰まる。\n小さな判断が、大きな影響。"}, {"id": 2008, "day": "日", "theme": "イベントの流儀", "source": "C", "words": "本番5分前、\n現場が急に静まり返る。\n全員が持ち場へ向かう、\n切り替わりの瞬間。"}, {"id": 2009, "day": "日", "theme": "イベントの流儀", "source": "C", "words": "終わった後の片付けこそ、\n仕事の真価が問われる。\n始まる前の準備と、\n終わった後の撤収が、本当の現場。"}, {"id": 2010, "day": "日", "theme": "イベントの流儀", "source": "C", "words": "VIP対応は、相手が誰でも同じ。\n丁寧に、慌てず、笑顔で。\nシンプルが、一番難しい。"}, {"id": 2011, "day": "日", "theme": "イベントの流儀", "source": "C", "words": "段差や危険箇所には、必ず印をつける。\n何もない場所で、人は転ばない。\n…はずだが、それでも転ぶ人がいる。\n備えは、念を入れて。"}, {"id": 2012, "day": "日", "theme": "イベントの流儀", "source": "C", "words": "現場で何かが起きた時、\n外見は冷静、内側で全力。\nプロは、震える手を見せない。"}, {"id": 2013, "day": "日", "theme": "イベントの流儀", "source": "C", "words": "イベント終了、\n撤収中のスタッフ全員と目が合う。\n言葉にせんでも、\n「お疲れ様」が伝わる瞬間。\nこれが、現場の絆。"}];
+const kusuttoData = [{"id": 1, "day": "月", "cat": "A", "title": "立哨モード解除できず", "body": "妻に「お父さん、玄関の前で何しとうと？」と聞かれた。\nいや、今日の現場の入り口だと思って…\n制服着てないのに、立哨モードが抜けていなかった。"}, {"id": 2, "day": "月", "cat": "A", "title": "敬礼が止まらん", "body": "コンビニのおじさんに、無意識に敬礼してしまった。\n相手も慌てて敬礼を返してきた。\n二人で会釈して、なんとか会計を済ませた。"}, {"id": 3, "day": "月", "cat": "A", "title": "誘導棒の幻肢", "body": "休みの日、信号待ちしてたら、\n手が勝手に「進め」のジェスチャーを出していた。\n隣のおばちゃんが、それに従って渡りかけた。"}, {"id": 5, "day": "月", "cat": "A", "title": "5分前行動の弊害", "body": "デートの待ち合わせ、\n約束の30分前に着いてしまった。\n相手が来た時、足が痺れて立てなかった。"}, {"id": 6, "day": "月", "cat": "A", "title": "巡回癖", "body": "自宅マンションの共用廊下を、\n夜中に2周してしまった。\nお隣さんに「不審者か？」と通報されかけた。"}, {"id": 7, "day": "月", "cat": "A", "title": "声出し癖", "body": "朝起きて、嫁さんに無意識に\n「上番します！」と言ってしまった。\n嫁さん「あんた、家やけん」"}, {"id": 9, "day": "月", "cat": "A", "title": "夏の制服地獄", "body": "8月の現場、\n制服の中で500mlの水を飲んだはずなのに、\n出てくる時には1リットルになっていた。"}, {"id": 11, "day": "月", "cat": "A", "title": "「警察ですか？」問題", "body": "現場で、おばあちゃんに\n「警察のおにいさん、道教えて」と言われた。\n「警備員です」と訂正したら、\n「ああ、警察やもんね」と納得された。"}, {"id": 12, "day": "月", "cat": "A", "title": "コンビニの常連扱い", "body": "現場近くのコンビニで、\n「いつもの缶コーヒーですね」と言われた。\n初めて来た店だった。\n…制服の威力、おそるべし。"}, {"id": 16, "day": "月", "cat": "A", "title": "制帽の中身", "body": "夏に制帽を脱いだら、\n髪型が天才バカボンの「これでいいのだ」みたいになっていた。\n現場の女性に二度見された。"}, {"id": 20, "day": "月", "cat": "A", "title": "「お疲れ様」のパワー", "body": "コンビニのレジで、\n店員さんに「お疲れ様です」と言われた瞬間、\n本当に疲れが半分ぐらい吹き飛んだ。\n言葉の力、あなどれん。"}, {"id": 22, "day": "月", "cat": "A", "title": "現場の謎の差し入れ", "body": "知らないおばちゃんから、\nいきなり饅頭をもらった。\n「いつもありがとうね」と言われた。\n…どちら様？"}, {"id": 25, "day": "月", "cat": "A", "title": "現場の謎ルール", "body": "毎日通うこの現場、\n3時になると野良猫が同じ場所に座る。\n気づいたら、私もその時間に立ち位置を変えていた。\n猫様の方が偉い。"}, {"id": 101, "day": "火", "cat": "R", "title": "夜間規制の漫才", "body": "深夜2時、道路規制の現場。\nA「お前、さっきから何ニヤニヤしとうと？」\nB「いや、嫁さんからのLINEがおもろくて」\nA「ワシは1回も来とらん」\nB「結婚20年やろ？」"}, {"id": 102, "day": "火", "cat": "R", "title": "誘導員の以心伝心", "body": "道路の両端で誘導している2人。\n200メートル離れていても、\n手の動きだけで完璧に連携できる。\n…でも、家では嫁さんとの意思疎通ができない。"}, {"id": 103, "day": "火", "cat": "R", "title": "深夜のドライバー", "body": "深夜の規制現場、\n通り過ぎるドライバーが\n窓から手を振ってくれる。\n…あれが、深夜勤の唯一の癒し。"}, {"id": 105, "day": "火", "cat": "R", "title": "夜間規制の差し入れ", "body": "深夜3時、近所のおばちゃんが\n「あんたたち、ご苦労様」とおにぎりを差し入れ。\n2人で泣きそうになりながら食べた。\n…これがあるから、夜勤やめられん。"}, {"id": 106, "day": "火", "cat": "R", "title": "誘導棒のリレー", "body": "誘導棒の電池が切れた瞬間、\n相方が無言で予備を投げてくれた。\n2メートル先にキャッチ。\n…30年やっとうコンビは違う。"}, {"id": 108, "day": "火", "cat": "R", "title": "クラクションの種類", "body": "30年やっとうと、クラクションだけで\n「ありがとう」「邪魔やぞ」「急いどうとよ」\n全部聞き分けられるようになる。\n…謎の特技。"}, {"id": 110, "day": "火", "cat": "R", "title": "夜間規制のトイレ問題", "body": "深夜2時、急にトイレに行きたくなる。\n…でも持ち場を離れられん。\n相方「先に行きや」\n…相方の優しさで、世界が回っとう。"}, {"id": 116, "day": "火", "cat": "R", "title": "ドライバーの一言", "body": "通り過ぎるドライバーが\n「あんた、ええ仕事しとうね」と一言。\n…あの一言で、3時間頑張れる。\n言葉の力、おそるべし。"}, {"id": 118, "day": "火", "cat": "R", "title": "雨の規制現場", "body": "土砂降りの規制現場、\n誘導棒が水浸しで、ボタンが効かなくなった。\n…手で振った。\n結局、それで通じた。"}, {"id": 125, "day": "火", "cat": "R", "title": "深夜の規制現場の音楽", "body": "相方が、誘導棒の音をリズムに\n小声で歌い出した。\n…これは、現場の即興ライブ。\nお客は、通り過ぎるドライバーだけ。"}, {"id": 130, "day": "火", "cat": "R", "title": "誘導員の引き継ぎ", "body": "次の班との引き継ぎ、\n「異常なし、ただし、3時間前から通行量ゼロ」\n次の班「…起きとってくださいよ」\n…起きとうわ。たぶん。"}, {"id": 137, "day": "火", "cat": "R", "title": "深夜の救急車", "body": "深夜の規制現場、救急車が来た。\nコーンを瞬時に動かして、道を開ける。\n…通過する瞬間、敬礼。\n誰の命かわからんけど、無事を祈る。"}, {"id": 140, "day": "火", "cat": "R", "title": "誘導員の朝日", "body": "夜勤明けの規制現場で見る朝日、\n感動する。\n…でも体は限界。\n感動と疲労が混ざった顔、\n相方も同じ顔しとう。"}, {"id": 141, "day": "水", "cat": "K", "title": "職人さんとの会話", "body": "工事現場、職人さん「兄ちゃん、コーヒー飲む？」\n「いただきます！」\n…これが現場の絆。\nクライアントより、職人さんが優しい。"}, {"id": 142, "day": "水", "cat": "K", "title": "土木のおっちゃん", "body": "土木のおっちゃん、\n「あんた、寒くなかか？」と毎朝聞いてくれる。\n寒くても「大丈夫です」と答える。\n…でも、缶コーヒー、ありがたい。"}, {"id": 144, "day": "水", "cat": "K", "title": "重機の挨拶", "body": "ショベルカーの運転手が、\n通り過ぎる時、必ず手を振ってくれる。\n…重機越しの挨拶、なぜか嬉しい。"}, {"id": 145, "day": "水", "cat": "K", "title": "工事現場の昼食", "body": "昼休み、職人さんと一緒にラーメン屋へ。\n…現場の仲間、最高。\n会社の同僚より、深い絆を感じる時がある。"}, {"id": 148, "day": "水", "cat": "K", "title": "工事の音", "body": "工事の重機の音、\n3時間も聞いとうと、もはや子守唄。\n…眠くなる現場、危険。\n眠気覚ましのコーヒー、必須。"}, {"id": 150, "day": "水", "cat": "K", "title": "工事現場の差し入れ", "body": "近所のおばちゃんが、現場全員分のおでんを差し入れ。\n…泣きそうになる職人さん、続出。\n人情の街、福岡。"}, {"id": 153, "day": "水", "cat": "K", "title": "工事現場の安全朝礼", "body": "毎朝の安全朝礼、\n「ご安全に！」と声を出す。\n…30年やっとうと、これが心のスイッチになる。\n声を出すと、目が覚める。"}, {"id": 155, "day": "水", "cat": "K", "title": "工事現場のラジオ", "body": "現場のラジオ、いつもFM福岡。\nナカジーの「おもろい家族」で、職人さんと一緒に笑う。\n…現場の絆、ラジオで深まる。"}, {"id": 157, "day": "水", "cat": "K", "title": "クレーンとの会話", "body": "クレーンのオペレーターと、無線で会話。\n「兄さん、左に1メートル」\n「了解！」\n…顔も知らん相手と、息が合う瞬間。"}, {"id": 160, "day": "水", "cat": "K", "title": "工事完了の日", "body": "3ヶ月通った現場、\n完了の日に職人さんと握手。\n…見送り、なんか涙が出そうになる。\n次はどこの現場で会えるかな。"}, {"id": 191, "day": "水", "cat": "T", "title": "マンション住民との挨拶", "body": "マンション警備、\n住民全員の顔を覚えた。\n…でも、名前はわからん。\n「いつもの方」と心の中で呼んでる。"}, {"id": 193, "day": "水", "cat": "T", "title": "犬の散歩おじいちゃん", "body": "毎朝、犬の散歩のおじいちゃんが\n「兄ちゃん、おはよう！」\n…30年経って、おじいちゃんはおじいちゃんのまま。\nなぜ歳をとらん。"}, {"id": 199, "day": "水", "cat": "T", "title": "現場の朝礼", "body": "朝の現場朝礼、\n「ご安全に！」と声を出す。\n…これが、警備員の一日の始まり。\n声で、心が引き締まる。"}, {"id": 161, "day": "木", "cat": "I", "title": "ららぽーとの迷子", "body": "「お母さん、どこー！」と泣いとう子供を発見。\n優しく声をかけたら、\n「警察のおじさん、助けて！」\n…警備員です。"}, {"id": 163, "day": "木", "cat": "I", "title": "おばあちゃんの忘れ物", "body": "ららぽーとの駐車場で、\nおばあちゃんが「車の場所、忘れた」と。\n一緒に30分歩いた。\n見つかった時の笑顔、忘れられん。\n…これが警備員の醍醐味。"}, {"id": 167, "day": "木", "cat": "I", "title": "施設の常連", "body": "毎日来るおじいちゃんが、\n「兄ちゃん、今日もご苦労さん」と。\n…常連さんの声かけ、心の栄養。"}, {"id": 170, "day": "木", "cat": "I", "title": "ららぽーとのおまけ", "body": "毎日通う子供が、\n「警備員さんに！」とアメをくれた。\n…ららぽーと警備、地域に根付く。"}, {"id": 175, "day": "木", "cat": "I", "title": "ららぽーとの夕方", "body": "夕方、お母さんが子供と手を繋いで歩く。\n…これを見る時間が、一日で一番幸せ。\n警備員、人間観察の達人。"}, {"id": 51, "day": "木", "cat": "S", "title": "新人の電源", "body": "新人「先輩、無線の調子悪いっす」\n先輩「電源入っとうか？」\n新人「…入ってませんでした」\n先輩「お前、それ、3日連続やぞ」"}, {"id": 53, "day": "木", "cat": "S", "title": "ベテランの一言", "body": "新人が現場で迷っとう時、\nベテランが一言。\n「初心に戻れ」\n…新人「初心、まだ忘れてないっす」\nベテラン「…若いな」"}, {"id": 59, "day": "木", "cat": "S", "title": "ベテランの差し入れ", "body": "ベテランが新人に\n「これ、食え」と差し入れ。\n中身は、自分の弁当の半分。\n…新人、感動して泣きそうだった。"}, {"id": 70, "day": "木", "cat": "S", "title": "新人の卒業", "body": "新人だった彼が、隊長になった日。\n「先輩、ありがとうございました」\n…こちらこそ、ありがとう。\n警備員、辞めらんね。"}, {"id": 71, "day": "木", "cat": "M", "title": "制服のサイズ", "body": "去年の制服が、今年は微妙にきつい。\nクリーニング屋のせいやと思いたいけど、\n…たぶん、私のせい。"}, {"id": 77, "day": "木", "cat": "M", "title": "嫁さんの視線", "body": "鏡の前で、お腹を引っ込めて見たら、\n嫁さんが\n「無理しなさんな」と一言。\n…見透かされとう。"}, {"id": 80, "day": "木", "cat": "M", "title": "髪の毛との別れ", "body": "シャンプーした後の排水溝、\n年々、見たくなくなる現象。\n…でも、誇りある仕事をしている。\n…そう、誇りはある。"}, {"id": 82, "day": "木", "cat": "M", "title": "コンビニのお姉さんに", "body": "コンビニのお姉さんに\n「いつもの、入れときますか？」と言われた。\n…常連認定された。\n50過ぎてのドキドキ。"}, {"id": 26, "day": "金", "cat": "F", "title": "息子の説明", "body": "5歳の息子に「お父さんの仕事って何？」と聞かれた。\n「悪い人が来んように見張る仕事ばい」\n翌日、保育園で「うちのお父さん、お巡りさんでもないし、忍者でもないんだって」と先生に報告したらしい。"}, {"id": 27, "day": "金", "cat": "F", "title": "娘の進路相談", "body": "中学生の娘に「将来何になりたい？」と聞いたら、\n「お父さんみたいな…」\n（おっ、嬉しい）\n「…にはなりたくない」\n…そっか。"}, {"id": 29, "day": "金", "cat": "F", "title": "孫の警察ごっこ", "body": "孫（4歳）が「ジイジ、警察ごっこしよう！」と言うので、\nノリノリで敬礼したら、\n「ジイジ、本物っぽすぎ。怖い。やめて」と泣かれた。"}, {"id": 30, "day": "金", "cat": "F", "title": "嫁さんの服装チェック", "body": "出勤前、嫁さんに\n「制服のシワ、伸ばしときよ」と言われた。\n…30年やっとうけど、まだ言われる。\nありがたいような、悔しいような。"}, {"id": 33, "day": "金", "cat": "F", "title": "妻の弁当の進化", "body": "新人の頃、妻が作ってくれる弁当は\nおかずが3種類だった。\n30年経った今、おにぎり2個だけになった。\n…これも愛、ということで。"}, {"id": 35, "day": "金", "cat": "F", "title": "犬のお迎え", "body": "夜勤明けで帰ったら、\n飼い犬だけが玄関で待ってくれていた。\n妻はリビングでドラマ観てた。\n…犬が一番優しい。"}, {"id": 38, "day": "金", "cat": "F", "title": "孫の真似", "body": "孫が、私の真似をして\nリビングで30分立哨してた。\n3歳児の集中力、おそるべし。\n…後継者か？"}, {"id": 43, "day": "金", "cat": "F", "title": "子どもの自由研究", "body": "夏休みの自由研究で、息子が「お父さんの仕事観察」を選んだ。\n現場までついてきて、3時間立っていた。\n「お父さん、すごいね」と言われた瞬間、すべて報われた。"}, {"id": 50, "day": "金", "cat": "F", "title": "妻の隠れた誇り", "body": "妻が友達に\n「うちの旦那、警備員やけん」と説明する時の声、\nなぜか少しだけ、誇らしげ。\n…気のせいかな。気のせいやないと信じたい。"}, {"id": 86, "day": "金", "cat": "N", "title": "夜勤明けの朝日", "body": "夜勤明けに見る朝日は、\n感動と疲労が半々。\n…泣いてるのか、目が乾いてるのか、わからん。"}, {"id": 89, "day": "金", "cat": "N", "title": "深夜の野良猫", "body": "深夜2時、現場に野良猫が来る。\n毎日、同じ時間。\n…猫の方が、シフトを守っとう。"}, {"id": 92, "day": "金", "cat": "N", "title": "深夜の電話", "body": "深夜、嫁さんから電話。\n「あんた、起きとう？」\n「立哨中ばい」\n「…そっか、ごめん」\n…眠そうな声、可愛い。"}, {"id": 100, "day": "金", "cat": "N", "title": "夜勤の終わり", "body": "夜勤、最後の30分が一番長い。\n時計の針が、本当にゆっくり動く。\n…時間を止める才能、警備員にはある。"}, {"id": 178, "day": "土", "cat": "W", "title": "休日の早起き", "body": "土曜日、休みなのに5時に目が覚める。\n…体内時計、完全に警備員仕様。\n仕方ないので、コンビニまで散歩。\n…結局、街を見回りしとう自分に気づく。"}, {"id": 179, "day": "土", "cat": "W", "title": "釣り好き、現場でも", "body": "現場のベテラン同士、\n「次の休み、釣り行こうや」\n「行く行く！」\n…警備員、休日も結局、誰かと一緒。\n一人で過ごす時間、少ない。"}, {"id": 182, "day": "土", "cat": "W", "title": "車好きの休日", "body": "休日、車を磨いとう。\n…これだけで一日終わる。\n嫁さん「あんた、車と結婚しとうやろ？」\n…ノーコメント。"}, {"id": 205, "day": "土", "cat": "W", "title": "コンビニで職業病", "body": "休日、コンビニで買い物中、\n変な客が入ってきた。\n…無意識に、客の動きを観察してしまう。\n…休めや、自分。"}, {"id": 206, "day": "土", "cat": "W", "title": "電車の中の人間観察", "body": "電車に乗っとう時、\n気づいたら他の乗客の動きを観察しとう。\n…警備員あるある。\n本人はリラックスしとうつもり。"}, {"id": 212, "day": "土", "cat": "W", "title": "休みの日の歩き方", "body": "休日に街を歩く時、\n自然と歩道の端を歩いている。\n…通行人の邪魔にならない位置。\n警備員、習慣で動く生き物。"}, {"id": 215, "day": "土", "cat": "W", "title": "土曜日の朝市", "body": "土曜の朝市、\n警備員のおっちゃんが、\n野菜を真剣に選んどう。\n…制服姿の時とのギャップ、激しい。\n家族には、これが本当の姿。"}, {"id": 262, "day": "土", "cat": "E", "title": "差し入れの神様クラス", "body": "現場での差し入れ、\n「萩の月」「東京ばな奈」が来た瞬間、\nスタッフ全員の目が輝く。\n…これは、神様の差し入れ。\n誰がくれたか、必ず覚えとく。"}, {"id": 264, "day": "土", "cat": "E", "title": "常温チオビタ問題", "body": "気持ちはありがたいけど、\n常温のチオビタ、誰も飲まん。\n…冷蔵庫がない夏の現場、\n常温は、もはや別の飲み物。\nくれた方、ごめんなさい。"}, {"id": 265, "day": "土", "cat": "E", "title": "タウリン2000の悲劇", "body": "差し入れに、\nマツキヨ系タウリン2000、常温が10本。\n…誰も飲まん。\nスタッフ全員、無言で目を逸らす。\nくれた方の気持ちだけ、ありがたく。"}, {"id": 267, "day": "土", "cat": "E", "title": "弁当ランクの存在", "body": "新人AD時代、\n「これ、誰の弁当？」と聞いた。\n先輩「Cやろ、お前のは」\n「Cって何ですか？」\n「教えん。食え。」\n…後で意味を知って、衝撃。"}, {"id": 268, "day": "土", "cat": "E", "title": "弁当ランクの解説", "body": "イベント弁当の格付け。\nA：出演する大物タレント本人用。\nB：バックダンサー・楽器の人。\nC：スタッフ・アルバイト。\nD：朝食用、おにぎり2個。\n…階級社会、ここに存在する。"}, {"id": 270, "day": "土", "cat": "E", "title": "A弁当争奪戦", "body": "ある大物タレント、本番前は何も食べない。\n…おかげで、A弁当が手付かずで残る。\nスタッフ全員、静かに動き出す。\n走らない、騒がない。\nでも、目だけはギラギラ。"}, {"id": 185, "day": "日", "cat": "W", "title": "日曜の朝の余裕", "body": "日曜の朝、\n珍しく目覚ましが鳴る前に起きた。\n…でも、起き上がる気力がない。\n警備員の日曜、こんなもん。"}, {"id": 186, "day": "日", "cat": "W", "title": "孫との散歩", "body": "日曜、孫と散歩。\n孫「ジイジ、おまわりさん？」\n「ジイジは警備員ばい」\n孫「…どっち？」\n説明、難しい。"}, {"id": 222, "day": "日", "cat": "W", "title": "蕎麦屋の常連", "body": "日曜の昼は、いつもの蕎麦屋。\n「いつもの？」と店主。\n「いつもので」\n…30年通っとう常連の証。\n説明不要の関係。"}, {"id": 226, "day": "日", "cat": "W", "title": "日曜の夜の現実", "body": "日曜の夜、\nサザエさんが終わった瞬間、\n月曜の朝が見えてくる。\n…警備員も、サザエさん症候群。\nこの時期だけは、誰でも憂鬱。"}, {"id": 249, "day": "日", "cat": "W", "title": "釣りの早朝", "body": "日曜の朝3時、釣り出発。\n…平日の現場入りより早い。\n好きなことのためなら、早起きできる人類。\nそれが、警備員。"}, {"id": 251, "day": "日", "cat": "E", "title": "新人ADの弁当地獄", "body": "新人AD、現場で弁当が余った。\n先輩「お前、食え」\n…昼に2個。\n持ち帰って夕食に3個。\n1日で同じ弁当5個。\n…翌日、見るのも嫌になった。"}, {"id": 252, "day": "日", "cat": "E", "title": "余った弁当の処分", "body": "イベント現場の鉄則。\nオーバーナイトした弁当は、絶対食べない。\nどれだけもったいなくても、処分。\n…新人時代、これを知らずに持ち帰ろうとして、\n先輩に強く止められた。\n…大事なルール。"}, {"id": 255, "day": "日", "cat": "E", "title": "1ヶ月現場の弁当ローテ", "body": "1ヶ月通う長丁場の現場、\n弁当は3種類のローテ。\n唐揚げ、幕の内、揚げ物。\n初週「ありがたい」\n2週目「またこれか」\n3週目「もう見たくない」\n4週目「カップ麺持参します」"}, {"id": 258, "day": "日", "cat": "E", "title": "素うどん欲求", "body": "1ヶ月、揚げ物弁当ばかりの現場。\n後半、スタッフ全員が\n「素うどん食べたい」と呟き出す。\n…胃が、シンプルなものを求めとう。\n体は正直。"}, {"id": 259, "day": "日", "cat": "E", "title": "何もない場所でつまずく", "body": "演歌の公演で、\nおばあちゃんが、何もない平坦な場所で転倒。\n…なぜ、ここで？\n段差もコードもないのに。\n人生の不思議。"}, {"id": 260, "day": "日", "cat": "E", "title": "心臓バクバク救急車", "body": "現場で転倒事故、すぐ救急車要請。\n外見は冷静、でも心臓バクバク。\n…プロは、内側で焦って外側で落ち着く。\n声は震えてないけど、手は震えとう。"}, {"id": 266, "day": "日", "cat": "E", "title": "余った差し入れの末路", "body": "現場最終日、\n常温の栄養ドリンクが20本余る。\n…処分するわけにもいかず、\n各自1本ずつ持ち帰る儀式。\n家の棚に、半年眠る運命。"}];
+
+const DOW_NAMES = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];
+const DOW_SHORT = ['日', '月', '火', '水', '木', '金', '土'];
+
+function getDateInfo() {
   const now = new Date();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const year = now.getFullYear();
-  const weekdayJP = WEEKDAY_JP[now.getDay()];
-  document.getElementById('dateMain').textContent = `${month}/${day}`;
-  document.getElementById('dateYear').textContent = year;
-  document.getElementById('dateWeekday').textContent = weekdayJP;
-  return { key: `${month}-${day}` };
+  return {
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+    day: now.getDate(),
+    dow: now.getDay(),
+    dowName: DOW_NAMES[now.getDay()],
+    dowShort: DOW_SHORT[now.getDay()],
+    iso: now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0')
+  };
 }
-async function loadContent() {
+
+function renderDate() {
+  const d = getDateInfo();
+  document.getElementById('dateMmdd').textContent = String(d.month).padStart(2, '0') + '/' + String(d.day).padStart(2, '0');
+  document.getElementById('dateYear').textContent = d.year;
+  document.getElementById('dateDow').textContent = d.dowName;
+}
+
+const STORAGE_KEY = 'ats-daily-v2-mode';
+
+function getTodaySelection() {
   try {
-    const r = await fetch('content.json');
-    contentData = await r.json();
-  } catch (e) { contentData = {}; }
-}
-function setTodaysTheme() {
-  const { key } = updateDateDisplay();
-  if (contentData && contentData[key]) {
-    const theme = contentData[key].theme;
-    const themeName = theme.split('・')[1] || theme;
-    document.getElementById('themeLabel').textContent = themeName;
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    const today = getDateInfo().iso;
+    if (data.date !== today) return null;
+    return data.mode;
+  } catch (e) {
+    return null;
   }
 }
-function reveal() {
-  if (isRevealed) return;
-  isRevealed = true;
-  const { key } = updateDateDisplay();
-  const data = contentData && contentData[key];
-  if (!data) {
-    document.getElementById('themeTag').textContent = '本日のひとこと';
-    document.getElementById('contentText').textContent = '今日も、一日お疲れ様です。';
+
+function setTodaySelection(mode) {
+  const data = {
+    date: getDateInfo().iso,
+    mode: mode
+  };
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) {}
+}
+
+function hashString(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash);
+}
+
+function pickTodaysWord(mode) {
+  const data = mode === 'a' ? kirittoData : kusuttoData;
+  if (!data || data.length === 0) return null;
+
+  const d = getDateInfo();
+  const todayItems = data.filter(item => item.day === d.dowShort);
+
+  if (todayItems.length === 0) {
+    const idx = hashString(d.iso + mode) % data.length;
+    return data[idx];
+  }
+
+  const idx = hashString(d.iso + mode) % todayItems.length;
+  return todayItems[idx];
+}
+
+function showWord(mode) {
+  const word = pickTodaysWord(mode);
+  if (!word) return;
+
+  // Hide button & chips
+  document.getElementById('revealBtn').style.display = 'none';
+  document.getElementById('modeChips').style.display = 'none';
+  document.getElementById('chipHint').style.display = 'none';
+
+  // Show badge
+  const badge = document.getElementById('modeBadge');
+  badge.textContent = mode === 'a' ? 'A — キリッと' : 'B — クスッと';
+  badge.className = 'mode-badge ' + mode;
+
+  // Update footer
+  const tagline = document.getElementById('footerTagline');
+  tagline.textContent = 'AI同好会';
+
+  // Build display
+  const existing = document.getElementById('wordDisplay');
+  if (existing) existing.remove();
+
+  const display = document.createElement('div');
+  display.id = 'wordDisplay';
+  display.className = 'word-display ' + (mode === 'a' ? 'a-mode' : 'b-mode');
+
+  if (mode === 'a') {
+    if (word.theme) {
+      const theme = document.createElement('div');
+      theme.className = 'word-day-label';
+      theme.textContent = word.theme;
+      display.appendChild(theme);
+    }
+    const body = document.createElement('div');
+    body.className = 'word-body a-mode';
+    body.textContent = word.words;
+    display.appendChild(body);
   } else {
-    document.getElementById('themeTag').textContent = data.theme;
-    document.getElementById('contentText').textContent = data.content;
+    if (word.title) {
+      const title = document.createElement('div');
+      title.className = 'word-title';
+      title.textContent = word.title;
+      display.appendChild(title);
+    }
+    const body = document.createElement('div');
+    body.className = 'word-body b-mode';
+    body.textContent = word.body;
+    display.appendChild(body);
   }
-  document.getElementById('buttonArea').classList.add('hidden');
-  document.getElementById('contentArea').classList.add('visible');
-  if (navigator.vibrate) navigator.vibrate(20);
+
+  document.getElementById('revealScreen').appendChild(display);
 }
-function reset() {
-  isRevealed = false;
-  document.getElementById('contentArea').classList.remove('visible');
-  document.getElementById('buttonArea').classList.remove('hidden');
+
+function handleManualSelect(mode) {
+  setTodaySelection(mode);
+  showWord(mode);
 }
-document.getElementById('mainButton').addEventListener('click', reveal);
-document.getElementById('resetButton').addEventListener('click', reset);
-(async () => {
-  updateDateDisplay();
-  await loadContent();
-  setTodaysTheme();
-})();
+
+function handleAIPick() {
+  const btn = document.getElementById('revealBtn');
+  // Disable interaction during shuffle
+  btn.style.pointerEvents = 'none';
+  document.querySelectorAll('.mode-chip').forEach(c => c.style.pointerEvents = 'none');
+
+  // Random pick
+  const mode = Math.random() < 0.5 ? 'a' : 'b';
+
+  // Add shuffle animation
+  btn.classList.add('shuffling');
+
+  setTimeout(() => {
+    btn.classList.remove('shuffling');
+    btn.classList.add(mode === 'a' ? 'locked-a' : 'locked-b');
+    setTodaySelection(mode);
+    showWord(mode);
+  }, 600);
+}
+
+function init() {
+  renderDate();
+
+  const todayMode = getTodaySelection();
+  if (todayMode) {
+    // Already selected today
+    showWord(todayMode);
+    return;
+  }
+
+  // Wire up buttons
+  document.getElementById('revealBtn').addEventListener('click', handleAIPick);
+  document.querySelectorAll('.mode-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      handleManualSelect(chip.dataset.mode);
+    });
+  });
+}
+
+init();
+
+// Watch for day change
+setInterval(() => {
+  if (getTodaySelection() === null) {
+    location.reload();
+  }
+}, 60000);
 </script>
+
 </body>
 </html>
